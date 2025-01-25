@@ -1,54 +1,97 @@
+"use client"
 import Image from "next/image";
 import styles from "./page.module.css";
+import { useEffect, useState } from "react";
+import BettingUnitDisplay from "./components/BettingUnitDisplay";
+import CounterInput from "./components/CounterInput";
+import CounterButton from "./components/CounterButton";
+import CounterDisplay from './components/CounterDisplay';
+
+import { useCallback } from "react";
 
 export default function Home() {
+
+  const [count, setCount] = useState(0)
+  const [totalDecks, setTotalDecks] = useState(6)
+  const [totalCardsDrawn, setTotalCardsDrawn] = useState(0)
+  const [trueCount, setTrueCount] = useState(0)
+  const [acesDrawn, setAcesDrawn] = useState(0)
+  
+  const handleButton = useCallback( (action?:string, label?:string) => {
+    // Update total cards drawn
+    setTotalCardsDrawn((prevTotalCardsDrawn) => {
+      const updatedTotalCardsDrawn = prevTotalCardsDrawn + 1;
+  
+      // Calculate the updated count
+      let updatedCount = count;
+      if (action === "add" && label === "+1") {
+        updatedCount += 1;
+      } else if (action === "subtract" && label === "-1") {
+        updatedCount -= 1;
+      } else if (action === "subtract" && label === "ace") {
+        updatedCount -= 1;
+        // Update acesDrawn when an ace is drawn
+        setAcesDrawn((prevAcesDrawn) => prevAcesDrawn + 1);
+      }
+  
+      // Update count state
+      setCount(updatedCount); 
+  
+      // Update true count
+      const updatedTrueCount = Number(
+        (updatedCount / (totalDecks - Math.round(updatedTotalCardsDrawn / 52))).toFixed(1)
+      );
+      setTrueCount(updatedTrueCount);
+  
+      return updatedTotalCardsDrawn;
+    });
+  },[count,totalDecks]);
+
+
+  useEffect(()=>{
+    handleButton()
+  },[totalDecks, handleButton])
+  
+        
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
+       <CounterButton
+       label = "+1"
+       incrementor = "add"
+       onClick={handleButton}
+       />
+       <CounterButton
+       label = "ace"
+       incrementor = "subtract"
+       onClick={handleButton}
+       />
+       <CounterButton
+       label = "-1"
+       incrementor = "subtract"
+       onClick={handleButton}
+       />
+       <CounterDisplay
+        count = {count}
+        trueCount = {trueCount}
+        acesDrawn = {(4*totalDecks) - acesDrawn}
+       />
+       <BettingUnitDisplay
+        trueCount = {trueCount}
+       />
+       <CounterInput
+        label = "Number of Decks"
+        totalDecks={totalDecks}
+        setInputState={setTotalDecks}
+       />
       </main>
+
+
+
       <footer className={styles.footer}>
+        Created By: Vincent Collis
         <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          href="https://github.com/vincentcollis/true-count-blackjack/"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -59,24 +102,11 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Learn
+          GitHub
         </a>
+        
         <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          href="https://www.linkedin.com/in/vincentcollis/"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -87,7 +117,7 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Go to nextjs.org →
+          LinkedIn
         </a>
       </footer>
     </div>
