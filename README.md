@@ -51,12 +51,12 @@ The **True Count Blackjack Tracker** is an interactive application designed to a
 Open your browser and navigate to http://localhost:3000.
 
 How to Use
-	1.	Set the Total Decks:
-	•	Use the input field to configure the number of decks in play.
-	2.	Track the Count:
-	•	Use the +1, -1, and Ace buttons to increment or decrement the running count based on the cards drawn.
-	3.	View Real-Time Metrics:
-	•	Observe the updated count, true count, and remaining aces in the Counter Display section.
-	4.	Determine Betting Strategy:
-	•	Check the recommended betting unit in the Betting Unit Display section and adjust your bets accordingly.
+1.	Set the Total Decks:
+	-	Use the input field to configure the number of decks in play.
+2.	Track the Count:
+	-	Use the +1, -1, and Ace buttons to increment or decrement the running count based on the cards drawn.
+3.	View Real-Time Metrics:
+	-	Observe the updated count, true count, and remaining aces in the Counter Display section.
+4.	Determine Betting Strategy:
+	-	Check the recommended betting unit in the Betting Unit Display section and adjust your bets accordingly.
 
